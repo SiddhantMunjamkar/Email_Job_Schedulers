@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import { authRouter } from "./routes/auth.routes.js";
+import router from "./routes";
 
 const app = express();
 
@@ -22,6 +22,6 @@ app.get("/api/v1/health", (req: Request, res: Response) => {
   res.status(200).send("OK");
 });
 
-app.use("/api/v1/auth", authRouter);
+app.use("/api/v1", router);
 
 export default app;
