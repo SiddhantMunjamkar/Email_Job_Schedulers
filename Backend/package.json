@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:server": "tsc -b && node dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^7.3.0",
+    "@prisma/client": "5.22.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -20,11 +20,13 @@
     "jsonwebtoken": "^9.0.3",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "prisma": "5.22.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/passport": "^1.0.17",
