@@ -22,10 +22,16 @@ export function startEmailWorker() {
   worker.on("failed", async (job, err) => {
     if (!job) return;
 
-    await prisma.emailJob.update({
-      where: { id: job.data.emailJobId },
-      data: { status: "FAILED", lastError: err.message },
-    });
+    const attempt = job.opts.attempts ?? 1;
+    const attempnumber = job.attemptsMade + 1;
+    const isFinalAttempt = attempnumber >= attempt;
+
+    if (isFinalAttempt) {
+      await prisma.emailJob.update({
+        where: { id: job.data.emailJobId },
+        data: { status: "FAILED", lastError: err.message },
+      });
+    }
   });
 
   return worker;
