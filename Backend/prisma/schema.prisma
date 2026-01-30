@@ -60,6 +60,8 @@ model Sender {
 
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   campaigns Campaign[]
+
+  @@unique([userId, fromemail]) //user cant create duplicate sender emails
 }
 
 model Campaign {

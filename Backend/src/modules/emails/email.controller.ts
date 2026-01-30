@@ -1,5 +1,42 @@
 import { Request, Response } from "express";
 import { createCampaignAndScheduleEmails } from "./email.service";
+import { EmailListItem, listScheduledEmails } from "./email.repo";
+
+export async function getScheduledEmailsController(
+  req: Request,
+  res: Response,
+) {
+  const user = req.authUser;
+  const { page, limit } = req.query;
+  const data = await listScheduledEmails({
+    userId: user!.id,
+    page: Number(page),
+    limit: Number(limit),
+  });
+  return res.status(200).json({
+    page,
+    limit,
+    total: data.total,
+    items: data.items,
+  });
+}
+
+export async function getSentEmailsController(req: Request, res: Response) {
+  const user = req.authUser;
+  const { page, limit } = req.query;
+  const data = await EmailListItem({
+    userId: user!.id,
+    page: Number(page),
+    limit: Number(limit),
+  });
+
+  return res.status(200).json({
+    page,
+    limit,
+    total: data.total,
+    items: data.items,
+  });
+}
 
 export async function scheduleEmailsController(req: Request, res: Response) {
   try {

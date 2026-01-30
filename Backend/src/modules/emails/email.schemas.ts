@@ -11,3 +11,23 @@ export const EmailJobSchema = z.object({
   hourlylimit: z.number().int().min(1).max(5000),
 });
 
+export const paginationSchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .transform((val) => {
+      return val ? Number(val) : 1;
+    })
+    .refine((val) => Number.isInteger(val) && val >= 1, "page  must be be >=1"),
+
+  limit: z
+    .string()
+    .optional()
+    .transform((val) => {
+      return val ? Number(val) : 20;
+    })
+    .refine(
+      (val) => Number.isInteger(val) && val >= 1 && val <= 100,
+      "limit 1-100",
+    ),
+});

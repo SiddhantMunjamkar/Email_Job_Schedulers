@@ -1,6 +1,5 @@
 import { prisma } from "../config/prisma";
 import { rescheduleToNextWindow } from "../scheduler/rescheduleToNextWindow";
-import { idempotencyKey } from "../services/idempotency/idempotency.keys";
 import {
   acquireEmailSendLock,
   releaseEmailsendLock,
