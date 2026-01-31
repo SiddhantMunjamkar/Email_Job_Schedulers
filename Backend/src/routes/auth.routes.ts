@@ -1,3 +1,4 @@
+import "../modules/auth/passport";
 import { Router } from "express";
 import passport from "passport";
 import { authController } from "../modules/auth/auth.controller.js";
