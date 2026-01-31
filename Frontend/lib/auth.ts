@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch } from "./api/api.server";
 import type { MeResponse } from "./types/auth";
 
 export async function getMe() {
