@@ -8,12 +8,12 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  //   let me;
-  //   try {
-  //     me = await getMe();
-  //   } catch  {
-  //     redirect("/login");
-  //   }
+    let me;
+    try {
+      me = await getMe();
+    } catch  {
+      redirect("/login");
+    }
 
   return (
     <div className=" flex h-screen">

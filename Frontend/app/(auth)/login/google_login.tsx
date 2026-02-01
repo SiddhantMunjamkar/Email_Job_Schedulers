@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { googleLogin } from "@/lib/auth";
+import { googleLogin } from "@/lib/auth.client";
 import { FcGoogle } from "react-icons/fc";
 
 export function GoogleLogin() {
