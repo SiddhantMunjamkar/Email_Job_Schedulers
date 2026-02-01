@@ -4,6 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { sidebarNavItems } from "./siderbarNavItems";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 export default function SidebarNav() {
   const pathname = usePathname();
@@ -35,13 +36,13 @@ export default function SidebarNav() {
 
 function NavItem({
   href,
-  icon,
+  icon: Icon,
   label,
   count,
   active,
 }: {
   href: string;
-  icon: React.ReactNode;
+  icon: React.ElementType;
   label: string;
   count?: number;
   active?: boolean;
@@ -56,9 +57,20 @@ function NavItem({
     >
       <div className="flex items-center gap-3 ">
         {/* Icon */}
-        <span>{icon}</span>
+        <Icon
+          className={cn("w-5 h-5 ", active ? "text-gray-700" : "text-gray-400")}
+        />
         {/* Label */}
-        <span className="text-sm font-medium">{label}</span>
+        <span
+          className={cn(
+            "text-sm",
+            active
+              ? " font-semibold text-gray-900"
+              : "font-medium text-gray-500",
+          )}
+        >
+          {label}
+        </span>
       </div>
       {count !== undefined && (
         <span className="text-sm text-gray-500 font-medium">{count}</span>
