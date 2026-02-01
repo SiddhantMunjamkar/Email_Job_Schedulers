@@ -1,5 +1,5 @@
 import { getMe } from "@/lib/auth";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { redirect } from "next/navigation";
 
@@ -10,14 +10,15 @@ export default async function DashboardLayout({
 }) {
     let me;
     try {
-      me = await getMe();
+      const response = await getMe();
+      me = response.user;
     } catch  {
       redirect("/login");
     }
 
   return (
     <div className=" flex h-screen">
-      <Sidebar />
+      <Sidebar {...me} />
       <div className="flex-1 flex flex-col">
         <Topbar />
         <main className="flex-1 overflow-auto bg-white">{children}</main>

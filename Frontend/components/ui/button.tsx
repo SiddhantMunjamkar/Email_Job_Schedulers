@@ -21,11 +21,13 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         custom_Google:
           "bg-[#e5f6ec] text-gray-900 hover:bg-[#d4eedc] border border-gray-200 cursor-pointer",
-          login:"bg-green-600 text-white hover:bg-green-700 font-styles:'sans-serif' mt-4 cursor-pointer",
+        login:"bg-green-600 text-white hover:bg-green-700 font-styles:'sans-serif' mt-4 cursor-pointer",
+        Compose:"flex items-center justify-center bg-white border-2 border-green-500 text-green-600 font-medium rounded-full hover:bg-green-50 transition-colors"
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         custom_Google:"h-11 w-full",
+        Compose:"w-full h-10 py-2.5 px-4",
         login:"h-11 w-full",
         xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
