@@ -25,7 +25,7 @@ export default function Sidebar({ id, name, email, avatarUrl }: User) {
 
       {/* Compose Button */}
       <div className=" mb-4 ">
-        <Link href="/dashboard/compose">
+        <Link href="/compose">
           <Button variant="Compose" size="Compose">
             Compose
           </Button>

@@ -11,6 +11,10 @@ export const EmailJobSchema = z.object({
   hourlylimit: z.number().int().min(1).max(5000),
 });
 
+export const EmailJobSchemaWithId = z.object({
+  id: z.string().min(1),
+});
+
 export const paginationSchema = z.object({
   page: z
     .string()

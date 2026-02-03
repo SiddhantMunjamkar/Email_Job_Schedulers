@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { createCampaignAndScheduleEmails } from "./email.service";
-import { EmailListItem, listScheduledEmails } from "./email.repo";
+import { EmailListItem, listScheduledEmails, getEmailById } from "./email.repo";
 
 export async function getScheduledEmailsController(
   req: Request,
   res: Response,
 ) {
   const user = req.authUser;
-  const { page, limit } = req.query;
+  const { page, limit } = (req as any).validatedQuery;
   const data = await listScheduledEmails({
     userId: user!.id,
     page: Number(page),
@@ -23,7 +23,7 @@ export async function getScheduledEmailsController(
 
 export async function getSentEmailsController(req: Request, res: Response) {
   const user = req.authUser;
-  const { page, limit } = req.query;
+  const { page, limit } = (req as any).validatedQuery;
   const data = await EmailListItem({
     userId: user!.id,
     page: Number(page),
@@ -76,4 +76,21 @@ export async function scheduleEmailsController(req: Request, res: Response) {
       error: error instanceof Error ? error.message : "Unknown error",
     });
   }
+}
+
+export async function getEmailByIdController(req: Request, res: Response) {
+  const user = req.authUser;
+  const { id } = req.params as any;
+
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const email = await getEmailById({ emailId: id, userId: user.id });
+
+  if (!email) {
+    return res.status(404).json({ message: "Email not found" });
+  }
+
+  return res.status(200).json(email);
 }

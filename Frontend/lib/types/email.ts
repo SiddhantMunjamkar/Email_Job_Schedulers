@@ -2,7 +2,8 @@ export type EmailItem = {
   id: string;
   recipientEmail: string;
   subject: string;
-  status: "SENT" | "PENDING" | "FAILED";
+  bodyPreview: string;
+  status: "SENT" | "SCHEDULED" | "DRAFT";
   ScheduledAt: string;
   sentAt: string | null;
 };
@@ -12,4 +13,9 @@ export type EmailListResponse = {
   limit: number;
   total: number;
   items: EmailItem[];
+};
+
+export type EmailDetailResponse = EmailItem & {
+  senderName: string;
+  senderEmail: string;
 };

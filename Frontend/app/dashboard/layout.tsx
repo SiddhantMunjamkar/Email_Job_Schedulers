@@ -1,6 +1,6 @@
 import { getMe } from "@/lib/auth";
 import Sidebar from "@/components/Sidebar/Sidebar";
-import { Topbar } from "@/components/Topbar";
+import { Topbar } from "@/components/Topbar/Topbar";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({

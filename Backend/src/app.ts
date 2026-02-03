@@ -9,12 +9,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: process.env.frontend_url,
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 app.use(passport.initialize());
 

@@ -3,9 +3,14 @@
 import { User } from "@/lib/types/auth";
 import { Menu } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Button } from "./ui/button";
+import { Logout } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export function ProfileDropdown({ name, email, avatarUrl }: User) {
+  const router = useRouter();
   return (
     <Menu as="div" className="relative ">
       {/* Button */}
@@ -32,7 +37,9 @@ export function ProfileDropdown({ name, email, avatarUrl }: User) {
           <p className="text-sm font-semibold text-gray-900 truncate">
             {name || "User"}
           </p>
-          <p className="text-xs text-gray-500 truncate">{email || "No email"}</p>
+          <p className="text-xs text-gray-500 truncate">
+            {email || "No email"}
+          </p>
         </div>
         {/* Chevron */}
         <ChevronDownIcon className="w-4 h-4 text-gray-500" />
@@ -43,13 +50,16 @@ export function ProfileDropdown({ name, email, avatarUrl }: User) {
         <div className="p-1">
           <Menu.Item>
             {({ active }) => (
-              <button
-                className={`${
-                  active ? "bg-gray-100" : ""
-                } w-full rounded px-3 py-2 text-left text-sm`}
+              <Button
+                variant="logout"
+                className={cn(active ? "bg-gray-100" : "")}
+                onClick={async () => {
+                  await Logout();
+                  router.push("/login");
+                }}
               >
                 Logout
-              </button>
+              </Button>
             )}
           </Menu.Item>
         </div>

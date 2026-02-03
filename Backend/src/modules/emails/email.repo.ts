@@ -26,8 +26,10 @@ export async function listScheduledEmails(params: {
         campaign: {
           select: {
             subject: true,
+            body: true,
             senderId: true,
           },
+          
         },
       },
     }),
@@ -46,6 +48,7 @@ export async function listScheduledEmails(params: {
         id: items.id,
         recipient: items.recipient,
         subject: items.campaign.subject,
+        bodyPreview: items.campaign.body.slice(0, 60),
         status: items.status,
         scheduledAt: items.scheduledAt.toISOString(),
         sentAt: items.sentAt ? items.sentAt.toISOString() : null,
@@ -97,18 +100,67 @@ export async function EmailListItem(params: {
   ]);
 
   return {
-    items: items.map((itmes) => {
+    items: items.map((items) => {
       return {
-        id: itmes.id,
-        recipient: itmes.recipient,
-        subject: itmes.campaign.subject,
-        status: itmes.status,
-        scheduledAt: itmes.scheduledAt.toISOString(),
-        sentAt: itmes.sentAt ? itmes.sentAt.toISOString() : null,
-        campaignId: itmes.campaignId,
-        senderId: itmes.campaign.senderId,
+        id: items.id,
+        recipient: items.recipient,
+        subject: items.campaign.subject,
+        status: items.status,
+        scheduledAt: items.scheduledAt.toISOString(),
+        sentAt: items.sentAt ? items.sentAt.toISOString() : null,
+        campaignId: items.campaignId,
+        senderId: items.campaign.senderId,
       };
     }),
     total,
+  };
+}
+
+export async function getEmailById(params: {
+  emailId: string;
+  userId: string;
+}) {
+  const email = await prisma.emailJob.findFirst({
+    where: {
+      id: params.emailId,
+      campaign: { userId: params.userId },
+    },
+    select: {
+      id: true,
+      recipient: true,
+      status: true,
+      scheduledAt: true,
+      sentAt: true,
+      lastError: true,
+      campaign: {
+        select: {
+          subject: true,
+          body: true,
+          sender: {
+            select: {
+              name: true,
+              fromemail: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!email) {
+    return null;
+  }
+
+  return {
+    id: email.id,
+    recipient: email.recipient,
+    subject: email.campaign.subject,
+    body: email.campaign.body,
+    status: email.status,
+    scheduledAt: email.scheduledAt.toISOString(),
+    sentAt: email.sentAt ? email.sentAt.toISOString() : null,
+    lastError: email.lastError,
+    senderName: email.campaign.sender.name,
+    senderEmail: email.campaign.sender.fromemail,
   };
 }

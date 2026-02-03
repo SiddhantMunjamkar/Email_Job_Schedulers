@@ -27,7 +27,8 @@ export function validateQuery(schema: ZodSchema) {
         errors: result.error.flatten(),
       });
     }
-    req.query = result.data as any;
+    // Store validated/coerced data in custom property (req.query is read-only)
+    (req as any).validatedQuery = result.data;
     next();
   };
 }
@@ -41,7 +42,8 @@ export function validateParams(schema: ZodSchema) {
         errors: result.error.flatten(),
       });
     }
-    req.params = result.data as any;
+    // Store validated/coerced data in custom property (req.params is read-only)
+    (req as any).validatedParams = result.data;
     next();
   };
 }
