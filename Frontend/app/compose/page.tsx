@@ -1,32 +1,24 @@
 "use client";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api/api.server";
 import { cn } from "@/lib/utils";
-import {
-  ArrowLeft,
-  Bold,
-  Upload,
-  Italic,
-  Underline,
-  List,
-  ListOrdered,
-  Quote,
-  Undo2,
-  Redo2,
-  Clock3,
-  Send,
-  Paperclip,
-} from "lucide-react";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { ArrowLeft, Clock3, Paperclip } from "lucide-react";
+import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
+import Heading from "@tiptap/extension-heading";
 import { Sender } from "@/lib/types/sender";
 import { Button } from "@/components/ui/button";
-import { Input } from "@headlessui/react";
-import { DateTimeInput } from "@/components/ui/Sendlater-datetime";
-import { Select } from "@/components/ui/select";
-import { Sen } from "next/font/google";
+import { DateTimeInput } from "@/components/Compose/Sendlater-datetime";
 import SendToInput from "@/components/Compose/SendToInput";
+import SubjectInput from "@/components/Compose/SubjectInput";
+import Delay_emails from "@/components/Compose/Delay-emails";
+import Hourlylimit from "@/components/Compose/Hourlylimilt";
+import BodyEditor from "@/components/Compose/BodyEditor";
+import { Placeholder } from "@tiptap/extensions";
+import FromEmail from "@/components/Compose/FromEmail";
 
 function extractEmails(text: string): string[] {
   const matches = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
@@ -48,32 +40,53 @@ export default function ComposePage() {
 
   // tip-tap editor
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit.configure({
+        heading: false,
+      }),
+      Heading.configure({
+        levels: [1, 2, 3],
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+      Underline,
+      Placeholder.configure({
+        placeholder: "Type your reply...",
+      }),
+    ],
     content: "",
     editorProps: {
       attributes: {
         class:
-          "min-h-[260px] w-full rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm outline-none",
+          "min-h-[260px] w-full rounded-xl border border-gray-200 bg-gray-50 p-4 outline-none prose prose-sm max-w-none",
       },
     },
     immediatelyRender: false,
   });
 
   useEffect(() => {
+    console.log("Fetching senders...");
     apiFetch<{ items: Sender[] }>("/api/v1/senders")
       .then((res) => {
-        setSenders(res.items);
-        if (res.items[0]) {
-          setSenderId(res.items[0].id);
+        console.log("API Response:", res);
+        const normalized = res.items.map((s) => ({
+          id: s.id,
+          name: s.name,
+          fromemail: s.fromemail,
+        }));
+
+        console.log("Normalized senders:", normalized);
+        setSenders(normalized);
+
+        if (normalized[0]) {
+          setSenderId(normalized[0].id);
         }
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.error("Error fetching senders:", error);
+      });
   }, []);
-
-  const visibleChips = useMemo(() => {
-    return recipientEmails.slice(0, 3);
-  }, [recipientEmails]);
-  const extraCount = Math.max(0, recipientEmails.length - 3);
 
   function onUploadFileClick() {
     fileRef.current?.click();
@@ -101,16 +114,16 @@ export default function ComposePage() {
 
     setLoading(true);
     try {
-      await apiFetch("/api/v1/emails/schedule", {
+      await apiFetch("/api/v1/emails/schedule-emails", {
         method: "POST",
         body: JSON.stringify({
           senderId,
           subject,
           body: plainText,
-          recipientEmails,
+          recipientEmail: recipientEmails,
           startAt: new Date(startAt).toISOString(),
-          delayBetweenSeconds,
-          hourlyLimit,
+          delayBetweenseconds: delayBetweenSeconds,
+          hourlylimit: hourlyLimit,
         }),
       });
       alert("Email scheduled successfully");
@@ -197,42 +210,43 @@ export default function ComposePage() {
       {/* Form area */}
       <div className="py-4 space-y-3 px-45">
         {/* From */}
-        <div className="flex items-center gap-3 px-6 py-2">
-          <label className="text-sm  w-12">From</label>
-          <select
-            value={senderId}
-            onChange={(e) => setSenderId(e.target.value)}
-            className="text-sm text-gray-900 bg-transparent outline-none cursor-pointer appearance-none pr-5 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23999%22%20d%3D%22M10.293%203.293%206%207.586%201.707%203.293A1%201%200%2000.293%204.707l5%205a1%201%200%20001.414%200l5-5a1%201%200%2010-1.414-1.414z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px] bg-[right_3px_center] bg-no-repeat border-none"
-          >
-            {senders.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.fromEmail}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FromEmail
+          senderId={senderId}
+          setSenderId={setSenderId}
+          senders={senders}
+        />
 
         {/* To */}
         <div className="px-6">
-          <SendToInput />
+          <SendToInput
+            recipientEmails={recipientEmails}
+            onEmailsChange={setRecipientEmails}
+            onUploadClick={onUploadFileClick}
+          />
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".txt,.csv"
+            onChange={onFileChange}
+            className="hidden"
+          />
         </div>
 
         {/* Subject */}
-        <div className="px-6 py-2">
-          <div className="flex items-center gap-3 border-b border-gray-200 pb-2">
-            <label className="text-sm  w-12">Subject</label>
-            <Input
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="Subject"
-              className="flex-1 border-0 text-sm outline-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
-            />
-          </div>
+        <SubjectInput subject={subject} setSubject={setSubject} />
+
+        {/* Delay between emails */}
+        <div className=" flex ">
+          <Delay_emails
+            value={delayBetweenSeconds}
+            onChange={setDelayBetweenSeconds}
+          />
+          <Hourlylimit value={hourlyLimit} onChange={setHourlyLimit} />
         </div>
 
         {/* Editor */}
         <div className="px-6 pt-2">
-          <EditorContent editor={editor} />
+          <BodyEditor editor={editor} />
         </div>
       </div>
     </div>

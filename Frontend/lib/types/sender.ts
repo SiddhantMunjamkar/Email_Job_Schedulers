@@ -1,5 +1,6 @@
 export type Sender = {
   id: string;
   name: string;
-  fromEmail: string;
+  fromemail: string;
+  createdAt?: string;
 };

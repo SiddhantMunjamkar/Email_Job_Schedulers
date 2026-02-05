@@ -8,7 +8,7 @@ export async function createSenderController(req: Request, res: Response) {
   const sender = await createSender({
     userId: user!.id,
     name,
-    fromEamil: fromEmail,
+    fromEmail: fromEmail,
   });
 
   return res.status(201).json({

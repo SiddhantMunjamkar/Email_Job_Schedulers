@@ -46,11 +46,11 @@ export async function listScheduledEmails(params: {
     items: items.map((items) => {
       return {
         id: items.id,
-        recipient: items.recipient,
+        recipientEmail: items.recipient,
         subject: items.campaign.subject,
         bodyPreview: items.campaign.body.slice(0, 60),
         status: items.status,
-        scheduledAt: items.scheduledAt.toISOString(),
+        ScheduledAt: items.scheduledAt.toISOString(),
         sentAt: items.sentAt ? items.sentAt.toISOString() : null,
         campaignId: items.campaignId,
         senderId: items.campaign.senderId,
@@ -153,13 +153,12 @@ export async function getEmailById(params: {
 
   return {
     id: email.id,
-    recipient: email.recipient,
+    recipientEmail: email.recipient,
     subject: email.campaign.subject,
-    body: email.campaign.body,
+    bodyPreview: email.campaign.body,
     status: email.status,
-    scheduledAt: email.scheduledAt.toISOString(),
+    ScheduledAt: email.scheduledAt.toISOString(),
     sentAt: email.sentAt ? email.sentAt.toISOString() : null,
-    lastError: email.lastError,
     senderName: email.campaign.sender.name,
     senderEmail: email.campaign.sender.fromemail,
   };

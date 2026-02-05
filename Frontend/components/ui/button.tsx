@@ -32,10 +32,15 @@ const buttonVariants = cva(
           "bg-white border-2 border-green-600 text-green-600 font-medium rounded-full hover:bg-green-50",
         Cancel: "font-medium  hover:bg-gray-100  rounded-full",
         Done: "bg-white border-2 border-green-600 text-green-600 font-medium rounded-full hover:bg-green-50",
-        upload_mail:"flex items-center  text-sm font-medium text-green-600 hover:text-green-700 whitespace-nowrap cursor-pointer",
+        upload_mail:
+          "flex items-center  text-sm font-medium text-green-600 hover:text-green-700 whitespace-nowrap cursor-pointer",
+        toolbar: "bg-transparent  hover:text-white",
+        Star: "text-gray-400 hover:text-gray-500",
       },
       size: {
-        upload_mail_list:"gap-1.5",
+        Star: "h-8 w-8 p-0",
+        toolbar: "h-8 w-8 p-0",
+        upload_mail_list: "gap-1.5",
         Done: "px-6 py-2 ",
         Cancel: "px-3 py-2 ",
         send_later: "h-10 px-4 py-2",

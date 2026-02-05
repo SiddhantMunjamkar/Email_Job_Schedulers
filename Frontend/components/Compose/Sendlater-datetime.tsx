@@ -7,9 +7,20 @@ export function DateTimeInput({
   ...props
 }: React.ComponentProps<"input">) {
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const [isPickerOpen, setIsPickerOpen] = React.useState(false);
 
   const handleCalendarClick = () => {
-    inputRef.current?.showPicker();
+    if (isPickerOpen) {
+      inputRef.current?.blur();
+      setIsPickerOpen(false);
+    } else {
+      inputRef.current?.showPicker();
+      setIsPickerOpen(true);
+    }
+  };
+
+  const handleBlur = () => {
+    setIsPickerOpen(false);
   };
 
   return (
@@ -18,6 +29,7 @@ export function DateTimeInput({
         ref={inputRef}
         type="datetime-local"
         {...props}
+        onBlur={handleBlur}
         className={cn(
           "w-full border-b border-gray-200 bg-transparent px-0 py-3 text-base text-gray-400 outline-none focus:border-gray-300 pr-10",
           "placeholder:text-gray-400",

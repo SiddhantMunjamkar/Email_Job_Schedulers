@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api/api.server";
 import { EmailListResponse, EmailItem } from "@/lib/types/email";
 import Link from "next/link";
+import { Star } from 'lucide-react';
 import Spinner from "@/components/ui/Spinner";
 
 export default function ScheduledPage() {
@@ -39,13 +40,13 @@ export default function ScheduledPage() {
   }
 
   return (
-    <div className="divide-y">
+    <div className="divide-y py-2">
       {items.map((item: EmailItem) => {
         return (
           <Link
             key={item.id || 123}
-            href={`/dashboard/scheduled/${item.id}`}
-            className="flex items-center justify-between px-6 py-4 hover:bg-gray-100"
+            href={`/emaildetail/${item.id}`}
+            className="flex items-center justify-between px-6 py-3 hover:bg-gray-100 border-gray-200 rounded-lg  hover:border-gray-300 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             {/* Render your email item here */}
             <div className="w-[220px] text-sm text-gray-700 truncate">
@@ -53,21 +54,23 @@ export default function ScheduledPage() {
             </div>
 
             {/* Render ScheduleAt or Send To */}
-            <div className="flex items-center gap-3 flex-1">
-              <span className="text-xs px-3 py-1 rounded-full bg-orange-100 text-orange-800">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <span className="text-xs px-3 py-1 rounded-full bg-orange-100 text-orange-800 shrink-0">
                 {new Date(item.ScheduledAt).toLocaleString() || "No Date"}
               </span>
 
               {/* Render subject body preview */}
-              <div className="text-sm font-medium truncate">
-                {item.subject || "No Subject"}
-                {""}
-                <span className="text-gray-400 font-normal">
-                  - {item.bodyPreview || "No Preview"}
+              <div className="text-sm min-w-0 flex-1 overflow-hidden">
+                <span className="font-medium">
+                  {item.subject || "No Subject"}
+                </span>
+                <span className="text-gray-400 font-normal"> - </span>
+                <span className="text-gray-400 font-normal inline-block truncate align-bottom max-w-[300px]">
+                  {item.bodyPreview || "No Preview"}
                 </span>
               </div>
             </div>
-            <div className="text-gray-400">☆</div>
+            <div className="text-gray-400"><Star className="w-4 h-4" /></div>
           </Link>
         );
       })}
