@@ -29,7 +29,6 @@ export async function listScheduledEmails(params: {
             body: true,
             senderId: true,
           },
-          
         },
       },
     }),
@@ -71,7 +70,7 @@ export async function EmailListItem(params: {
     prisma.emailJob.findMany({
       where: {
         campaign: { userId: params.userId },
-        status: { in: ["SCHEDULED", "SENT"] },
+        status: { in: ["SENT"] },
       },
       orderBy: { scheduledAt: "asc" },
       skip,
@@ -94,7 +93,7 @@ export async function EmailListItem(params: {
     await prisma.emailJob.count({
       where: {
         campaign: { userId: params.userId },
-        status: { in: ["SCHEDULED", "SENT"] },
+        status: { in: ["SENT"] },
       },
     }),
   ]);
@@ -162,4 +161,23 @@ export async function getEmailById(params: {
     senderName: email.campaign.sender.name,
     senderEmail: email.campaign.sender.fromemail,
   };
+}
+
+export async function getCountScheduleSend(params: { userId: string }) {
+  const [scheduledCount, sentCount] = await Promise.all([
+    prisma.emailJob.count({
+      where: {
+        campaign: { userId: params.userId },
+        status: { in: ["SCHEDULED", "SENDING"] },
+      },
+    }),
+
+    prisma.emailJob.count({
+      where: {
+        campaign: { userId: params.userId },
+        status: { in: ["SENT"] },
+      },
+    }),
+  ]);
+  return { scheduledCount, sentCount };
 }

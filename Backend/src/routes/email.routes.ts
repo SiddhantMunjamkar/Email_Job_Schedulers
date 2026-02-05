@@ -15,6 +15,7 @@ import {
   scheduleEmailsController,
   getSentEmailsController,
   getEmailByIdController,
+  getScheduledSendCountController,
 } from "../modules/emails/email.controller";
 
 const router = Router();
@@ -39,6 +40,8 @@ router.post(
   validateRequest(EmailJobSchema),
   scheduleEmailsController,
 );
+
+router.get("/count/stats", requireAuth, getScheduledSendCountController);
 
 router.get(
   "/:id",

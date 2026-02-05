@@ -19,11 +19,9 @@ import Hourlylimit from "@/components/Compose/Hourlylimilt";
 import BodyEditor from "@/components/Compose/BodyEditor";
 import { Placeholder } from "@tiptap/extensions";
 import FromEmail from "@/components/Compose/FromEmail";
+import { extractEmailsFromFile } from "@/lib/utils/emailsFileParser";
 
-function extractEmails(text: string): string[] {
-  const matches = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
-  return Array.from(new Set(matches || []));
-}
+
 
 export default function ComposePage() {
   const router = useRouter();
@@ -65,6 +63,13 @@ export default function ComposePage() {
     immediatelyRender: false,
   });
 
+  const canSchedule =
+    !!senderId &&
+    !!startAt &&
+    subject.trim().length > 0 &&
+    !!editor &&
+    recipientEmails.length > 0;
+
   useEffect(() => {
     console.log("Fetching senders...");
     apiFetch<{ items: Sender[] }>("/api/v1/senders")
@@ -89,17 +94,29 @@ export default function ComposePage() {
   }, []);
 
   function onUploadFileClick() {
-    fileRef.current?.click();
+    if( fileRef.current){
+      fileRef.current.value = ""; 
+       fileRef.current?.click();
+
+    }
+   
   }
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const text = await file.text();
-    const emails = extractEmails(text);
+    const emails = await extractEmailsFromFile(file);
 
-    setRecipientEmails(emails);
+    if (emails.length === 0) {
+      alert("No vaild email addresses found in file");
+      return;
+    }
+
+    setRecipientEmails((prev) => {
+      const combined = new Set([...prev, ...emails]);
+      return Array.from(combined);
+    });
   }
 
   async function handleSchedule() {
@@ -139,7 +156,7 @@ export default function ComposePage() {
     <div className="h-full bg-white">
       {/* top Header */}
       <div className="flex items-center justify-between px-4 py-4 border-b  border-gray-100">
-        <div className="flex items-center ">
+        <div className="flex items-center gap-3 ">
           <Button
             variant="backarrow"
             size="backarrow"
@@ -160,7 +177,11 @@ export default function ComposePage() {
             onClick={() => setShowSendLater((s) => !s)}
             className={cn(showSendLater ? "bg-gray-100" : "hover:bg-gray-100")}
           >
-            <Clock3 className="size-6 text-green-600" />
+            <Clock3
+              className={cn(
+                startAt ? "size-6 text-green-600" : "size-6 text-gray-500",
+              )}
+            />
           </Button>
 
           <Button
@@ -168,6 +189,10 @@ export default function ComposePage() {
             onClick={handleSchedule}
             variant="Send_later"
             size="send_later"
+            className={cn(
+              !canSchedule && "opacity-50 cursor-not-allowed",
+              canSchedule && "hover:bg-green-50 ",
+            )}
           >
             Send Later
           </Button>

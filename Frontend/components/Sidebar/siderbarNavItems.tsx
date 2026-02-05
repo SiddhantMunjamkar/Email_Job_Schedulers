@@ -1,4 +1,5 @@
 import { Clock, Send } from "lucide-react";
+ 
 
 export const sidebarNavItems = [
   {
@@ -6,13 +7,13 @@ export const sidebarNavItems = [
     label: "Scheduled",
     icon: Clock,
     href: "/dashboard/scheduled",
-    count: 12,
+    countKey: "scheduledCount" as const,
   },
   {
     id: 2,
     label: "Sent",
     icon: Send ,
     href: "/dashboard/sent",
-    count: 785,
+    countKey: "sentCount" as const,
   },
 ];

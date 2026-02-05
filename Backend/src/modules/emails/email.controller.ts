@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import { createCampaignAndScheduleEmails } from "./email.service";
-import { EmailListItem, listScheduledEmails, getEmailById } from "./email.repo";
+import {
+  EmailListItem,
+  listScheduledEmails,
+  getEmailById,
+  getCountScheduleSend,
+} from "./email.repo";
 
 export async function getScheduledEmailsController(
   req: Request,
@@ -93,4 +98,18 @@ export async function getEmailByIdController(req: Request, res: Response) {
   }
 
   return res.status(200).json(email);
+}
+
+export async function getScheduledSendCountController(
+  req: Request,
+  res: Response,
+) {
+  const user = req.authUser;
+  const data = await getCountScheduleSend({
+    userId: user!.id,
+  });
+  return res.status(200).json({
+    scheduledCount: data.scheduledCount,
+    sentCount: data.sentCount,
+  });
 }

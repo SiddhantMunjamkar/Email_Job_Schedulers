@@ -4,10 +4,30 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { sidebarNavItems } from "./siderbarNavItems";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api/api.server";
+
+interface EmailStats {
+  scheduledCount: number;
+  sentCount: number;
+}
 
 export default function SidebarNav() {
   const pathname = usePathname();
+  const [stats, setStats] = useState<EmailStats | null>(null);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const data = await apiFetch<EmailStats>("/api/v1/emails/count/stats");
+        setStats(data);
+      } catch (error) {
+        console.error("Error fetching email stats:", error);
+      }
+    }
+    fetchStats();
+  }, [pathname]);
+
   return (
     <nav className="flex flex-col gap-1">
       {/* Section Label */}
@@ -19,12 +39,13 @@ export default function SidebarNav() {
       {/* Navigation Items */}
       {sidebarNavItems.map((item) => {
         const isActive = pathname === item.href;
+        const count = stats ? stats[item.countKey] : undefined;
         return (
           <NavItem
             href={item.href}
             icon={item.icon}
             label={item.label}
-            count={item.count}
+            count={count}
             key={item.id}
             active={isActive}
           />
