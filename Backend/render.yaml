@@ -3,6 +3,7 @@ services:
   - type: web
     name: email-scheduler-server
     runtime: docker
+    rootDir: ./Backend
     dockerfilePath: ./Dockerfile
     dockerCommand: node dist/server.js
     plan: free
@@ -48,6 +49,7 @@ services:
   - type: worker
     name: email-scheduler-worker
     runtime: docker
+    rootDir: ./Backend
     dockerfilePath: ./Dockerfile
     dockerCommand: node dist/worker.js
     plan: free
