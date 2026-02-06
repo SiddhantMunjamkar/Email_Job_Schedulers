@@ -85,6 +85,7 @@ export async function EmailListItem(params: {
         campaign: {
           select: {
             subject: true,
+            body: true,
             senderId: true,
           },
         },
@@ -102,8 +103,9 @@ export async function EmailListItem(params: {
     items: items.map((items) => {
       return {
         id: items.id,
-        recipient: items.recipient,
+        recipientEmail: items.recipient,
         subject: items.campaign.subject,
+        bodyPreview: items.campaign.body.slice(0, 60),
         status: items.status,
         scheduledAt: items.scheduledAt.toISOString(),
         sentAt: items.sentAt ? items.sentAt.toISOString() : null,

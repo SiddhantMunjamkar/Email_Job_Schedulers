@@ -11,5 +11,8 @@ export async function createEtherealTransporter() {
       user: testAcc.user,
       pass: testAcc.pass,
     },
+    tls: {
+      rejectUnauthorized: false, // Accept self-signed certificates for testing
+    },
   });
 }

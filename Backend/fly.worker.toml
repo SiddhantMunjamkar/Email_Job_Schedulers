@@ -1,0 +1,19 @@
+# fly.toml app configuration file for Email Job Scheduler - Worker
+# Deploy with: fly deploy -c fly.worker.toml
+
+app = 'email-job-schedulers-worker'
+primary_region = 'bom'
+
+[build]
+
+[env]
+  NODE_ENV = 'production'
+
+# No HTTP service for worker (background process only)
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '256mb'
+
+[experimental]
+  cmd = ["node", "dist/worker.js"]

@@ -87,13 +87,21 @@ export async function processEmailJob(emailJobId: string) {
   } catch (error) {
     console.error(`Error processing email job ${emailJobId}:`, error);
 
-    await prisma.emailJob.update({
+    // Only try to update if the job exists in DB
+    const jobExists = await prisma.emailJob.findUnique({
       where: { id: emailJobId },
-      data: {
-        status: "SCHEDULED", // reset to scheduled for retry
-        lastError: error instanceof Error ? error.message : "Unknown error",
-      },
+      select: { id: true },
     });
+
+    if (jobExists) {
+      await prisma.emailJob.update({
+        where: { id: emailJobId },
+        data: {
+          status: "SCHEDULED", // reset to scheduled for retry
+          lastError: error instanceof Error ? error.message : "Unknown error",
+        },
+      });
+    }
 
     throw error; // Re-throw so BullMQ knows the job failed and can retry
   } finally {

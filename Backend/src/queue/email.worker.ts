@@ -27,10 +27,22 @@ export function startEmailWorker() {
     const isFinalAttempt = attempnumber >= attempt;
 
     if (isFinalAttempt) {
-      await prisma.emailJob.update({
+      // Only update if the job exists in the database
+      const emailJob = await prisma.emailJob.findUnique({
         where: { id: job.data.emailJobId },
-        data: { status: "FAILED", lastError: err.message },
+        select: { id: true },
       });
+
+      if (emailJob) {
+        await prisma.emailJob.update({
+          where: { id: job.data.emailJobId },
+          data: { status: "FAILED", lastError: err.message },
+        });
+      } else {
+        console.warn(
+          `Email job ${job.data.emailJobId} not found in database during failure handling`,
+        );
+      }
     }
   });
 

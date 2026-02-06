@@ -7,11 +7,11 @@ export async function reconciliationOnStartup() {
 
   const now = new Date();
 
-  // get all jobs that are due to be sent to queue
+  // get all jobs that are due to be sent to queue (scheduled for now or in the past)
   const ScheduledJobs = await prisma.emailJob.findMany({
     where: {
       status: "SCHEDULED",
-      scheduledAt: { gt: now },
+      scheduledAt: { lte: now },
     },
     select: {
       id: true,

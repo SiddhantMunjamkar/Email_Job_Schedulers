@@ -13,7 +13,7 @@ export default function ScheduledPage() {
     async function fetchData() {
       try {
         const data = await apiFetch<EmailListResponse>(
-          "/api/v1/emails/send?page=1&limit=50",
+          "/api/v1/emails/sent?page=1&limit=50",
         );
 
         setItems(data.items);
@@ -54,7 +54,7 @@ export default function ScheduledPage() {
 
             {/* Render ScheduleAt or Send To */}
             <div className="flex items-center gap-3 flex-1">
-              <span className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium">
+              <span className="text-xs px-3 py-1 rounded-full bg-gray-200 text-gray-700 font-medium">
                 sent
               </span>
 
