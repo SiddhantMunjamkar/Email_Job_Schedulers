@@ -12,7 +12,7 @@ export const authController = {
 
     res.cookie(authCookieName, token, authCookieOptions);
 
-    return res.redirect(`${process.env.frontend_url}/dashboard`);
+    return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   },
 
   signup: async (req: Request, res: Response) => {
