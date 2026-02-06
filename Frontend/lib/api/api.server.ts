@@ -9,8 +9,6 @@ export async function apiFetch<T>(
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Cookie:
-        "auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWwyanl2aWswMDAwNmFwaW15ZHZqZXNzIiwiaWF0IjoxNzcwMDI2MTU0LCJleHAiOjE3NzA2MzA5NTR9.rAJsQ76YVOidtF4uP_xPVTJpybjkZvJC1ST_0UrVuO4",
       ...(options?.headers || {}),
     },
   });
