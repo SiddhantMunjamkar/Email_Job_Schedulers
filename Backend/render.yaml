@@ -1,0 +1,86 @@
+services:
+  # Express Server - Handles HTTP requests
+  - type: web
+    name: email-scheduler-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: node dist/server.js
+    plan: free
+    region: singapore
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: WORKER_CONCURRENCY
+        value: 5
+      - key: MAX_EMAILS_PER_HOUR_PER_SENDER
+        value: 200
+      - key: MIN_DELAY_BETWEEN_EMAILS_SECONDS
+        value: 2
+    buildFilter:
+      paths:
+        - src/**
+        - prisma/**
+        - package.json
+        - tsconfig.json
+        - Dockerfile
+
+  # Background Worker - Processes BullMQ jobs
+  - type: worker
+    name: email-scheduler-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: node dist/worker.js
+    plan: free
+    region: singapore
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: WORKER_CONCURRENCY
+        value: 5
+      - key: MAX_EMAILS_PER_HOUR_PER_SENDER
+        value: 200
+      - key: MIN_DELAY_BETWEEN_EMAILS_SECONDS
+        value: 2
+    buildFilter:
+      paths:
+        - src/**
+        - prisma/**
+        - package.json
+        - tsconfig.json
+        - Dockerfile
