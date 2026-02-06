@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { getMe } from "@/lib/auth";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { Topbar } from "@/components/Topbar/Topbar";
-import { Spinner } from "@/components/ui/Spinner";
+import Spinner from "@/components/ui/Spinner";
 
 export default function DashboardLayout({
   children,
