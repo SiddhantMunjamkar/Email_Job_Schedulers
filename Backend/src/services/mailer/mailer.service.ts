@@ -9,7 +9,10 @@ export async function createEtherealTransporter() {
     // secure: testAcc.smtp.secure,
     auth: {
       user: "luz.smitham@ethereal.email",
-      pass: "7FEm23kkJh2Vc8PGdN",
+      pass: "7FEm23kkJh2Vc8PGdN"
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 }
