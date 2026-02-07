@@ -4,15 +4,12 @@ export async function createEtherealTransporter() {
   const testAcc = await nodemailer.createTestAccount();
 
   return nodemailer.createTransport({
-    host: testAcc.smtp.host,
-    port: testAcc.smtp.port,
-    secure: testAcc.smtp.secure,
+    host: "smtp.ethereal.email",
+    port: 587,
+    // secure: testAcc.smtp.secure,
     auth: {
-      user: testAcc.user,
-      pass: testAcc.pass,
-    },
-    tls: {
-      rejectUnauthorized: false, // Accept self-signed certificates for testing
+      user: "luz.smitham@ethereal.email",
+      pass: "7FEm23kkJh2Vc8PGdN",
     },
   });
 }
