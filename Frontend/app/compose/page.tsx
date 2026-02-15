@@ -126,9 +126,10 @@ export default function ComposePage() {
     if (!editor) return alert("Editor  not ready");
     if (recipientEmails.length === 0) return alert("No recipient email");
 
-    const htmlbody = editor.getHTML();
+    // const htmlbody = editor.getHTML();
     const plainText = editor.getText();
 
+    
     setLoading(true);
     try {
       await apiFetch("/api/v1/emails/schedule-emails", {

@@ -53,7 +53,7 @@ export async function processEmailJob(emailJobId: string) {
 
     if (!allowed.allowed) {
       //  adding to next time window
-      await rescheduleToNextWindow(emailJobId);
+      await rescheduleToNextWindow(emailJobId); 
       return;
     }
 

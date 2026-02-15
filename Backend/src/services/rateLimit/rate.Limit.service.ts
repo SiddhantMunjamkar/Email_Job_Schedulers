@@ -20,7 +20,7 @@ export async function tryConsumeSendHourlyQuota(params: {
   const count = await redis.incr(key);
 
   if (count === 1) {
-    await redis.expire(key, ttlseconds);
+    await redis.expire(key, ttlseconds); // 5 min sender id -->5min
   }
 
   const allowed = count <= params.limitPerHour;
