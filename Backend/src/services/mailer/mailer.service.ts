@@ -8,11 +8,12 @@ export async function createEtherealTransporter() {
     port: 587,
     // secure: testAcc.smtp.secure,
     auth: {
-      user: "luz.smitham@ethereal.email",
-      pass: "7FEm23kkJh2Vc8PGdN"
+      user: "jaren.goodwin59@ethereal.email",
+      pass: "n5AFycN2RU7tuP17Ka",
     },
     tls: {
       rejectUnauthorized: false,
     },
   });
 }
+
