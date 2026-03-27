@@ -19,3 +19,4 @@ export type EmailDetailResponse = EmailItem & {
   senderName: string;
   senderEmail: string;
 };
+
