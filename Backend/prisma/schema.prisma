@@ -44,6 +44,7 @@ model Account {
   @@unique([provider, providerId])
 }
 
+
 enum EmailJobStatus {
   SCHEDULED
   SENDING
